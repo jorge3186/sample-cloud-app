@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: sample-config
+  profiles:
+    active: ${CONFIG_PROFILES:native}
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/jorge3186/sample-cloud-app.git
+          username: ${GIT_USER}
+          password: ${GIT_PASSWORD}
+          clone-on-start: true
+          searchPaths: config/cl-data*
+
+server:
+  port: ${CONFIG_PORT:8888}
