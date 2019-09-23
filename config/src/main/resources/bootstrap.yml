@@ -12,7 +12,14 @@ spring:
           username: ${GIT_USER}
           password: ${GIT_PASSWORD}
           clone-on-start: true
-          searchPaths: config/cl-data*
+          search-paths: config/cl-data/*
+        native:
+          search-locations:
+            - config/cl-data/*
 
 server:
   port: ${CONFIG_PORT:8888}
+
+logging:
+  level:
+    org.springframework.*: INFO
