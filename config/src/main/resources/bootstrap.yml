@@ -8,14 +8,14 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/jorge3186/sample-cloud-app.git
+          uri: https://github.com/jorge3186/sample-cloud-app
           username: ${GIT_USER}
           password: ${GIT_PASSWORD}
           clone-on-start: true
-          search-paths: config/cl-data/*
+          search-paths: '*,config/cl-data/*,config/cl-data/{application}/*'
         native:
           search-locations:
-            - config/cl-data/*
+            - 'config/cl-data/*'
 
 server:
   port: ${CONFIG_PORT:8888}
