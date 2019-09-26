@@ -19,7 +19,6 @@ pluginManagement {
 
 include(
         "config",
-        "discovery",
         "exchange-rates",
         "currency-converter"
 )

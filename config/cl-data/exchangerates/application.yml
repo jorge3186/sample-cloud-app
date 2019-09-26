@@ -1,1 +1,3 @@
-default-time: now
+rates:
+  base-url: https://api.exchangeratesapi.io
+  default-base: USD

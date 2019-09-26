@@ -1,0 +1,20 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: sample-currency-converter
+
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:localhost}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        instance-id: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        health-check-path: /actuator/health
+        helath-check-interval: 120s
+        tags: app=${spring.application.name}, group=com.jordanalphonso
+
+    loadbalancer:
+      ribbon:
+        enabled: false
