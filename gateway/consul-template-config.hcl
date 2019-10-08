@@ -1,12 +1,10 @@
 consul {
-
   address = "discovery:8500"
 
   retry {
     enabled = true
     attempts = 100
     backoff = "250ms"
-
   }
 }
 

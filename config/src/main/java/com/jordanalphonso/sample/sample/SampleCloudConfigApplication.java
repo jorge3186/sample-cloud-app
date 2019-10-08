@@ -1,4 +1,4 @@
-package com.jordanalphonso.sample;
+package com.jordanalphonso.sample.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

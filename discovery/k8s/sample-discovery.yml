@@ -1,0 +1,60 @@
+# -- DEPLOYMENT
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-cloud-discovery-deployment
+  labels:
+    group: sample-cloud-app
+    app: sample-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      group: sample-cloud-app
+      app: sample-discovery
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        group: sample-cloud-app
+        app: sample-discovery
+    spec:
+      restartPolicy: Always
+      volumes:
+        - name: sample-discovery-config-volume
+          hostPath:
+            path: /app/discovery/config
+            type: DirectoryOrCreate
+      containers:
+        - name: discovery
+          image: consul:1.6
+          args:
+            - 'agent'
+            - '-config-file'
+            - '/consul/config/config.json'
+          ports:
+            - containerPort: 8500
+          volumeMounts:
+            - mountPath: "/consul/config"
+              name: sample-discovery-config-volume
+
+
+---
+# -- SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery
+  labels:
+    group: sample-cloud-app
+    app: sample-discovery
+spec:
+  type: NodePort
+  selector:
+      app: sample-discovery
+  ports:
+    - port: 8500
+      targetPort: 8500
+      protocol: TCP

@@ -1,0 +1,52 @@
+# -- DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-cloud-gateway-deployment
+  labels:
+    group: sample-cloud-app
+    app: sample-gateway
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: sample-gateway
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        group: sample-cloud-app
+        app: sample-gateway
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: gateway
+          image: sample-gateway:latest
+          imagePullPolicy: Never
+          env:
+            - name: DISCOVERY_HOST
+              value: discovery
+            - name: DISCOVERY_PORT
+              value: '8500'
+          ports:
+            - containerPort: 80
+
+
+# -- SERVICE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-cloud-gateway-service
+  labels:
+    group: sample-cloud-app
+    app: sample-gateway
+spec:
+  type: NodePort
+  selector:
+    app: sample-gateway
+  ports:
+    - targetPort: 80
+      port: 80
+      protocol: TCP

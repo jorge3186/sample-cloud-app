@@ -1,0 +1,59 @@
+# -- DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-cloud-config-deployment
+  labels:
+    group: sample-cloud-app
+    app: sample-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      group: sample-cloud-app
+      app: sample-config
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        group: sample-cloud-app
+        app: sample-config
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: config
+          image: sample-config:latest
+          imagePullPolicy: Never
+          env:
+            - name: CONFIG_PROFILES
+              value: default
+            - name: CONFIG_PORT
+              value: '8080'
+            - name: GIT_USER
+              value: jorge3186
+            - name: GIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: git
+                  key: GIT_PASSWORD
+          ports:
+            - containerPort: 8080
+
+---
+# -- SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: config
+  labels:
+    group: sample-cloud-app
+    app: sample-config
+spec:
+  type: ClusterIP
+  selector:
+    app: sample-config
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP

@@ -1,0 +1,58 @@
+# -- DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-cloud-app-exchange-rates-deployment
+  labels:
+    group: sample-cloud-app
+    app: sample-exchange-rates
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: sample-exchange-rates
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        group: sample-cloud-app
+        app: sample-exchange-rates
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: exchange-rates
+          image: sample-exchange-rates:latest
+          imagePullPolicy: Never
+          env:
+            - name: CONSUL_HOST
+              value: discovery
+            - name: CONSUL_PORT
+              value: '8500'
+            - name: CONFIG_HOST
+              value: config
+            - name: CONFIG_PORT
+              value: '8080'
+            - name: EX_RATES_PORT
+              value: '8080'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+
+---
+# -- HORIZONTAL AUTO SCALE
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sample-cloud-app-exchange-rates-autoscaler
+  labels:
+    group: sample-cloud-app
+    app: sample-exchange-rates
+spec:
+  minReplicas: 1
+  maxReplicas: 5
+  scaleTargetRef:
+    name: sample-cloud-app-exchange-rates-deployment
+    kind: Deployment
+    apiVersion: apps/v1
+  targetCPUUtilizationPercentage: 75

@@ -1,4 +1,4 @@
-package com.jordanalphonso.sample;
+package com.jordanalphonso.sample.sample;
 
 import java.time.LocalDate;
 import java.util.Map;

@@ -22,4 +22,6 @@ RUN chmod +x /usr/local/app-config/entrypoint.sh
 RUN rm -f /etc/nginx/sites-enabled/default
 RUN rm -f /etc/nginx/conf.d/default.conf
 
+EXPOSE 80
+
 CMD ["/usr/local/app-config/entrypoint.sh"]

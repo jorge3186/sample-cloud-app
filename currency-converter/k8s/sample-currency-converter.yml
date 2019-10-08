@@ -1,0 +1,76 @@
+# -- DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-cloud-app-currency-converter-deployment
+  labels:
+    group: sample-cloud-app
+    app: sample-currency-converter
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: sample-currency-converter
+  template:
+    metadata:
+      labels:
+        group: sample-cloud-app
+        app: sample-currency-converter
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: currency-converter
+          image: sample-currency-converter:latest
+          imagePullPolicy: Never
+          env:
+            - name: CONSUL_HOST
+              value: discovery
+            - name: CONSUL_PORT
+              value: '8500'
+            - name: CONFIG_HOST
+              value: config
+            - name: CONFIG_PORT
+              value: '8080'
+            - name: EX_RATES_PORT
+              value: '8080'
+          ports:
+            - containerPort: 8080
+
+---
+# -- SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: currency-converter
+  labels:
+    group: sample-cloud-app
+    app: sample-currency-converter
+spec:
+  type: ClusterIP
+  selector:
+    app: sample-exchange-rates
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+
+---
+# -- HORIZONTAL AUTO SCALE
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sample-cloud-app-currency-converter-autoscaler
+  labels:
+    group: sample-cloud-app
+    app: sample-currency-converter
+spec:
+  minReplicas: 1
+  maxReplicas: 5
+  scaleTargetRef:
+    name: sample-cloud-app-currency-converter-deployment
+    kind: Deployment
+    apiVersion: apps/v1
+  targetCPUUtilizationPercentage: 75
+
