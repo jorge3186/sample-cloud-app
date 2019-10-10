@@ -1,0 +1,1 @@
+{"ID":"sample-ui-65628e95-5316-4cf3-93e4-6908a1aacdb7","Name":"sample-ui","Tags":["app=sample-ui","secure=false"],"Address":"10.255.48.240","Port":"8080","Meta":{},"EnableTagOverride":false,"Check":{"HTTP":"http://10.255.48.240:8080","Interval":"30s"},"Weights":{"Passing":10,"Warning":1}}

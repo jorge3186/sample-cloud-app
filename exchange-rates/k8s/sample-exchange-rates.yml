@@ -12,7 +12,7 @@ spec:
   selector:
     matchLabels:
       app: sample-exchange-rates
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -35,6 +35,8 @@ spec:
               value: '8080'
             - name: EX_RATES_PORT
               value: '8080'
+            - name: ACTIVE_PROFILES
+              value: default,k8s
           ports:
             - containerPort: 8080
               protocol: TCP

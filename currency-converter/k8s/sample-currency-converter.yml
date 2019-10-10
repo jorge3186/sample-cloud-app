@@ -7,7 +7,7 @@ metadata:
     group: sample-cloud-app
     app: sample-currency-converter
 spec:
-  replicas: 3
+  replicas: 1
   strategy:
     type: RollingUpdate
   selector:
@@ -33,28 +33,12 @@ spec:
               value: config
             - name: CONFIG_PORT
               value: '8080'
-            - name: EX_RATES_PORT
+            - name: CURR_CONV_PORT
               value: '8080'
+            - name: ACTIVE_PROFILES
+              value: 'default,k8s'
           ports:
             - containerPort: 8080
-
----
-# -- SERVICE
-apiVersion: v1
-kind: Service
-metadata:
-  name: currency-converter
-  labels:
-    group: sample-cloud-app
-    app: sample-currency-converter
-spec:
-  type: ClusterIP
-  selector:
-    app: sample-exchange-rates
-  ports:
-    - port: 8080
-      targetPort: 8080
-      protocol: TCP
 
 ---
 # -- HORIZONTAL AUTO SCALE

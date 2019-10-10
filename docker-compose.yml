@@ -11,7 +11,6 @@ services:
       - "8500:8500"
     volumes:
       - ./discovery/config:/consul/config
-      - ./discovery/data:/consul/data
     networks:
       - sample-app
 
